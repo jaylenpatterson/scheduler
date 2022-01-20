@@ -1,6 +1,12 @@
 import React from 'react';
-import '/components/Appointment/styles.scss';
+import '../Appointment/styles.scss';
+
 
 export default function Appointment(props) {
-	return <article className="appointment" />;
+
+	return (
+		<article className="appointment">
+			{!props.time ? "no appointments" : "appointment at" + " " + props.time}
+		</article>
+	) 
 }
