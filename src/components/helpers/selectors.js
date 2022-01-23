@@ -1,10 +1,9 @@
 export function getAppointmentsForDay(state, day) {
 	let appointments = [];
 
-  if (!state.days[0]) {
-    return appointments
-   
-  }
+	if (!state.days[0]) {
+		return appointments;
+	}
 
 	const getAppointmentIds = () => {
 		for (let x of state.days) {
@@ -12,14 +11,20 @@ export function getAppointmentsForDay(state, day) {
 				return x.appointments;
 			}
 		}
-    return appointments
+		return appointments;
 	};
 
 	getAppointmentIds().map((x) => {
-    if (state.appointments[`${x}`]) {
-      appointments.push(state.appointments[`${x}`])
-    } 
+		if (state.appointments[`${x}`]) {
+			appointments.push(state.appointments[`${x}`]);
+		}
 	});
 
-  return appointments
+	return appointments;
+}
+
+export function getInterview(state, interview) {
+	console.log(state)
+	console.log(interview)
+	return "hi"
 }

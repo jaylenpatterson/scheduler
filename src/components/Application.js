@@ -5,22 +5,34 @@ import 'components/Application.scss';
 
 import DayList from './DayList';
 import Appointment from './Appointment';
+import { getAppointmentsForDay, getInterview } from './helpers/selectors';
+
 
 export default function Application(props) {
 	const [ state, setState ] = useState({
 		day: 'Monday',
 		days: [],
-		appointments: {}
+		appointments: {},
+		interviewers: {}
 	});
-
-	const dailyAppointments = [];
-
 	const setDay = (day) => {
 		return setState({ ...state, day });
 	};
-	const appointmentList = dailyAppointments.map((appointment) => {
-		return <Appointment key={appointment.id} {...appointment} />;
-	});
+
+const appointments = getAppointmentsForDay(state, state.day);
+
+const schedule = appointments.map((appointment) => {
+  const interview = getInterview(state, appointment.interview);
+
+  return (
+    <Appointment
+      key={appointment.id}
+      id={appointment.id}
+      time={appointment.time}
+      interview={interview}
+    />
+  );
+});
 
 	useEffect(() => {
 		Promise.all([
@@ -35,17 +47,12 @@ export default function Application(props) {
 			setState((all) => ({
 				...state,
 				days: first.data,
-				appointments: {
-					interviewers: third.data,
-					...second,
-
-					
-				}
+				appointments: second.data,
+				interviewers: third.data
 			}));
-
-			console.log(first, second);
 		});
 	}, []);
+
 
 	return (
 		<main className="layout">
@@ -57,7 +64,7 @@ export default function Application(props) {
 				</nav>
 				<img className="sidebar__lhl sidebar--centered" src="images/lhl.png" alt="Lighthouse Labs" />
 			</section>
-			<section className="schedule">{appointmentList}</section>
+			<section className="schedule">{appointments}</section>
 		</main>
 	);
 }
