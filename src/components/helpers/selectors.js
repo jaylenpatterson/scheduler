@@ -37,3 +37,30 @@ export function getInterview(state, interview) {
 		}
 	};
 }
+
+export function getInterviewersForDay(state, day) {
+	console.log("day", day)
+
+		let interviewers = [];
+
+	if (!state.days[0]) {
+		return interviewers;
+	}
+
+	const getAppointmentIds = () => {
+		for (let x of state.days) {
+			if (x.name === day) {
+				return x.interviewers;
+			}
+		}
+		return interviewers;
+	};
+
+	getAppointmentIds().map((x) => {
+		if (state.interviewers[`${x}`]) {
+			interviewers.push(state.interviewers[`${x}`]);
+		}
+	});
+	console.log("result", interviewers)
+	return interviewers;
+}

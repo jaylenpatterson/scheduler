@@ -15,11 +15,11 @@ export default function Appointment(props) {
 		<article className="appointment">
 			<Header time={props.time} />
 
-			{mode === EMPTY && <Empty onAdd={transition(CREATE) }/>}
+			{mode === EMPTY && <Empty onAdd={()=> transition(CREATE)} />}
 			{mode === SHOW && <Show interviewer={props.interview['interviewer'].name} student={props.interview['student']}/>}
-			{mode === CREATE && <Form interviewers={[]} />}
+			{mode === CREATE && <Form interviewers={props.interviewers} onCancel={back}  />}
 
-	
+
 		</article>
 	);
 }
