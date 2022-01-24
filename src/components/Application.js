@@ -6,7 +6,7 @@ import 'components/Application.scss';
 import DayList from './DayList';
 import Appointment from './Appointment';
 import { getAppointmentsForDay, getInterview } from './helpers/selectors';
-
+import useVisualMode from 'hooks/useVisualMode';
 
 export default function Application(props) {
 	const [ state, setState ] = useState({
@@ -19,20 +19,13 @@ export default function Application(props) {
 		return setState({ ...state, day });
 	};
 
-const appointments = getAppointmentsForDay(state, state.day);
+	const appointments = getAppointmentsForDay(state, state.day);
 
-const schedule = appointments.map((appointment) => {
-  const interview = getInterview(state, appointment.interview);
+	const schedule = appointments.map((appointment) => {
+		const interview = getInterview(state, appointment.interview);
 
-  return (
-    <Appointment
-      key={appointment.id}
-      id={appointment.id}
-      time={appointment.time}
-      interview={interview}
-    />
-  );
-});
+		return <Appointment key={appointment.id} id={appointment.id} time={appointment.time} interview={interview} />;
+	});
 
 	useEffect(() => {
 		Promise.all([
@@ -40,19 +33,15 @@ const schedule = appointments.map((appointment) => {
 			axios.get('/api/appointments'),
 			axios.get('/api/interviewers')
 		]).then((all) => {
-			console.log('cool', all[0]); // first
-			console.log('nice', all[1].data); // second
-			console.log('dang', all[2]); // third
 			const [ first, second, third ] = all;
 			setState((all) => ({
-				...state,
+				...all,
 				days: first.data,
 				appointments: second.data,
 				interviewers: third.data
 			}));
 		});
 	}, []);
-
 
 	return (
 		<main className="layout">
@@ -64,7 +53,7 @@ const schedule = appointments.map((appointment) => {
 				</nav>
 				<img className="sidebar__lhl sidebar--centered" src="images/lhl.png" alt="Lighthouse Labs" />
 			</section>
-			<section className="schedule">{appointments}</section>
+			<section className="schedule">{schedule}</section>
 		</main>
 	);
 }
