@@ -15,17 +15,19 @@ export default function Application(props) {
 		appointments: {},
 		interviewers: {}
 	});
+
+	const EMPTY = 'EMPTY';
+	const SHOW = 'SHOW';
+	const CREATE = 'CREATE';
+	const SAVING = 'SAVING';
+	const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
 	const setDay = (day) => {
 		return setState({ ...state, day });
 	};
 	const interviewers = getInterviewersForDay(state, state.day);
 	const appointments = getAppointmentsForDay(state, state.day);
-
 	const schedule = appointments.map((appointment) => {
 		const interview = getInterview(state, appointment.interview);
-		console.log("interviews", appointment.interview)
-		console.log("1",interviewers)
-		console.log("2",interview)
 		return (
 			<Appointment
 				key={appointment.id}
@@ -34,6 +36,7 @@ export default function Application(props) {
 				interview={interview}
 				interviewers={interviewers}
 				bookInterview={bookInterview}
+				cancelInterview={cancelInterview}
 			/>
 		);
 	});
@@ -42,24 +45,22 @@ export default function Application(props) {
 		const appointment = {
 			...state.appointments[id],
 			interview: { ...interview }
-
 		};
 		const appointments = {
 			...state.appointments,
 			[id]: appointment
 		};
-
-		
-
-
-		// axios.put(('/api/appointments/:id') => {
-
-		// }).then()
 		setState({
 			...state,
 			appointments
 		});
 
+		return axios.put(`/api/appointments/${id}`, { interview }).then((res) => transition(SHOW));
+	}
+
+	function cancelInterview(id) {
+
+		return axios.delete(`/api/appointments/${id}`)
 	}
 
 	useEffect(() => {
