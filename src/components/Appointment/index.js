@@ -15,6 +15,7 @@ export default function Appointment(props) {
 	const SAVING = 'SAVING';
 	const DELETING = 'DELETING';
 	const CONFIRM = 'CONFIRM';
+	const EDIT = 'EDIT';
 	const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
 
 	function save(name, interviewer) {
@@ -42,6 +43,7 @@ export default function Appointment(props) {
 					interviewer={props.interview['interviewer'].name}
 					student={props.interview['student']}
 					onDelete={() => transition(CONFIRM)}
+					onEdit={() => transition(EDIT)}
 				/>
 			)}
 			{mode === CREATE && <Form interviewers={props.interviewers} onCancel={back} onSave={save} />}
@@ -57,6 +59,7 @@ export default function Appointment(props) {
 					message={'are you sure doe?'}
 				/>
 			)}
+			{mode === EDIT && <Form interviewers={props.interviewers} onCancel={back} onSave={save} interviewer={props.interview.interviewer.id} student={props.interview.student} />}
 		</article>
 	);
 }

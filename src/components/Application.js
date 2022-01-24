@@ -18,8 +18,6 @@ export default function Application(props) {
 
 	const EMPTY = 'EMPTY';
 	const SHOW = 'SHOW';
-	const CREATE = 'CREATE';
-	const SAVING = 'SAVING';
 	const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
 	const setDay = (day) => {
 		return setState({ ...state, day });
