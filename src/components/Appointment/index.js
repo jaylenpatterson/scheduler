@@ -7,6 +7,7 @@ import useVisualMode from 'hooks/useVisualMode';
 import Form from './Form';
 import Status from './Status';
 import Confirm from './Confirm';
+import Error from './Error';
 
 export default function Appointment(props) {
 	const EMPTY = 'EMPTY';
@@ -16,6 +17,9 @@ export default function Appointment(props) {
 	const DELETING = 'DELETING';
 	const CONFIRM = 'CONFIRM';
 	const EDIT = 'EDIT';
+	const ERROR_SAVE = 'ERROR_SAVE';
+	const ERROR_DELETE = 'ERROR_DELETE';
+	const ERROR_EMPTY = 'ERROR_EMPTY';
 	const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
 
 	function save(name, interviewer) {
@@ -23,14 +27,24 @@ export default function Appointment(props) {
 			student: name,
 			interviewer
 		};
+		if (interview.student === "" || interviewer === null ) {
+			return transition(ERROR_EMPTY)
+		}
 		transition(SAVING);
-		props.bookInterview(props.id, interview).then(() => transition(SHOW));
+		props.bookInterview(props.id, interview).then(() => transition(SHOW)).catch((err) => {
+			return transition(ERROR_SAVE, true);
+		});
 	}
 
 	function deleteApp() {
-		props.cancelInterview(props.id).then((res) => {
-			transition(EMPTY);
-		});
+		props
+			.cancelInterview(props.id)
+			.then((res) => {
+				transition(EMPTY, true);
+			})
+			.catch((err) => {
+				return transition(ERROR_DELETE, true);
+			});
 	}
 
 	return (
@@ -49,6 +63,21 @@ export default function Appointment(props) {
 			{mode === CREATE && <Form interviewers={props.interviewers} onCancel={back} onSave={save} />}
 			{mode === SAVING && <Status saving={true} />}
 			{mode === DELETING && <Status deleting={true} />}
+			{mode === EDIT && (
+				<Form
+					interviewers={props.interviewers}
+					onCancel={back}
+					onSave={save}
+					interviewer={props.interview.interviewer.id}
+					student={props.interview.student}
+				/>
+			)}
+			{mode === ERROR_SAVE && (
+				<Error message={"Sorry we're unable to SAVE at this time!"} onClose={() => transition(SHOW)} />
+			)}
+			{mode === ERROR_DELETE && (
+				<Error message={"Sorry we're unable DELETE at this time!"} onClose={() => transition(SHOW)} />
+			)}
 			{mode === CONFIRM && (
 				<Confirm
 					onConfirm={() => {
@@ -59,7 +88,9 @@ export default function Appointment(props) {
 					message={'are you sure doe?'}
 				/>
 			)}
-			{mode === EDIT && <Form interviewers={props.interviewers} onCancel={back} onSave={save} interviewer={props.interview.interviewer.id} student={props.interview.student} />}
+			{mode === ERROR_EMPTY && (
+				<Error message={"Sorry! You need to include a student and an instructor in your request!"} onClose={() => transition(EMPTY)} />
+			) }
 		</article>
 	);
 }

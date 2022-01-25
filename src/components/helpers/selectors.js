@@ -38,6 +38,7 @@ export function getInterview(state, interview) {
 	};
 }
 
+
 export function getInterviewersForDay(state, day) {
 	let interviewers = [];
 	if (!state.days[0]) {
