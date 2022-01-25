@@ -37,16 +37,17 @@ export default function useApplicationData() {
 			...state.appointments,
 			[id]: appointment
 		};
-
+		const days = createDaysObject(state.days, appointments);
+    
 		return axios
 			.put(`api/appointments/${id}`, appointment)
 			.then((res) => {
 				if (res) {
 					setState({
 						...state,
-						appointments
+						appointments,
+						days
 					});
-					updateSpotsRemaining();
 				}
 			})
 			.catch((error) => {
@@ -55,33 +56,44 @@ export default function useApplicationData() {
 	}
 
 	function cancelInterview(id) {
-		return axios.delete(`/api/appointments/${id}`);
+    const appointment = {
+      ...state.appointments[id],
+			interview: null
+		};
+		const appointments = {
+      ...state.appointments,
+			[id]: appointment
+		};
+    const days = createDaysObject(state.days, appointments);
+		return axios.delete(`/api/appointments/${id}`).then(() => {
+			setState({
+				...state,
+				appointments,
+        days
+			});
+		});
 	}
 
-	function updateSpotsRemaining() {
+	function updateSpotsRemaining(day, appointments) {
 		let spotsRemaining = 0;
-		const spots = {
-			...state.days[0].spots
-		};
-		getAppointmentsForDay(state, state.day).map((x) => {
-			console.log(state.days[0].spots);
-
-			if (x.interview === null) {
+		for (const appointmentId of day.appointments) {
+			if (appointments[appointmentId].interview === null) {
 				spotsRemaining++;
 			}
+		}
+
+		return spotsRemaining;
+	}
+
+	function createDaysObject(days, appointments) {
+		const daysUpdated = days.map((day) => {
+			return {
+				...day,
+				spots: updateSpotsRemaining(day, appointments)
+			};
 		});
 
-		setState({
-			...state
-		});
-
-
-		// // const spots =  state.days[1].spots
-		// // console.log(state.days[1].spots  )
-		// setState({
-		//   ...state,
-
-		// })
+		return daysUpdated;
 	}
 
 	return {
