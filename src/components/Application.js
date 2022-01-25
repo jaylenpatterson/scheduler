@@ -7,21 +7,14 @@ import DayList from './DayList';
 import Appointment from './Appointment';
 import { getAppointmentsForDay, getInterview, getInterviewersForDay } from './helpers/selectors';
 import useVisualMode from 'hooks/useVisualMode';
-
+import useApplicationData from 'hooks/useApplicationData';
 export default function Application(props) {
-	const [ state, setState ] = useState({
-		day: 'Monday',
-		days: [],
-		appointments: {},
-		interviewers: {}
-	});
+
 
 	const EMPTY = 'EMPTY';
 	const SHOW = 'SHOW';
 	const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
-	const setDay = (day) => {
-		return setState({ ...state, day });
-	};
+	const { cancelInterview, bookInterview, setDay, state} = useApplicationData()
 	const interviewers = getInterviewersForDay(state, state.day);
 	const appointments = getAppointmentsForDay(state, state.day);
 
@@ -40,55 +33,6 @@ export default function Application(props) {
 		);
 	});
 
-	function bookInterview(id, interview) {
-		const appointment = {
-			...state.appointments[id],
-			interview: { ...interview }
-		};
-		const appointments = {
-			...state.appointments,
-			[id]: appointment
-		};
-		setState({
-			...state,
-			appointments
-		});
-
-		return axios
-			.put(`api/appointments/${id}`, appointment)
-			.then((res) => {
-				if (res) {
-					setState({
-						...state,
-						appointments
-					});
-				}
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	}
-
-	function cancelInterview(id) {
-		return axios.delete(`/api/appointments/${id}`);
-	}
-
-	useEffect(() => {
-		Promise.all([
-			axios.get('/api/days'),
-			axios.get('/api/appointments'),
-			axios.get('/api/interviewers')
-		]).then((all) => {
-			const [ first, second, third ] = all;
-			setState((all) => ({
-				...all,
-				days: first.data,
-				appointments: second.data,
-				interviewers: third.data
-			}));
-		});
-	}, []);
-
 	return (
 		<main className="layout">
 			<section className="sidebar">
@@ -100,6 +44,7 @@ export default function Application(props) {
 				<img className="sidebar__lhl sidebar--centered" src="images/lhl.png" alt="Lighthouse Labs" />
 			</section>
 			<section className="schedule">{schedule}</section>
+			<Appointment key="last" time="5pm" bookInterview={bookInterview} />
 		</main>
 	);
 }
