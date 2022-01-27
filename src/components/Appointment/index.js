@@ -28,10 +28,10 @@ export default function Appointment(props) {
 			interviewer
 		};
 		if (interview.student === "" || interviewer === null ) {
-			return transition(ERROR_EMPTY)
-		}
+			return transition(CREATE)
+		};
 		transition(SAVING);
-		props.bookInterview(props.id, interview).then(() => transition(SHOW)).catch((err) => {
+		props.bookInterview(props.id, interview).then(() => transition(SHOW)).catch(() => {
 			return transition(ERROR_SAVE, true);
 		});
 	}
@@ -89,7 +89,7 @@ export default function Appointment(props) {
 				/>
 			)}
 			{mode === ERROR_EMPTY && (
-				<Error message={"Sorry! You need to include a student and an instructor in your request!"} onClose={() => transition(EMPTY)} />
+				<Error message={"student name cannot be blank"} onClose={() => transition(EMPTY)} />
 			) }
 		</article>
 	);

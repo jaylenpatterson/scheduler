@@ -21,13 +21,11 @@ export default function DayListItem(props) {
 	});
 
 	return (
-		<li>
-			<h2 onClick={() => props.setDay(props.name)} className={dayClass}>
+		<li className={dayClass} onClick={() => props.setDay(props.name)}>
+			<h2  className="text--regular">
 				{props.name}
 			</h2>
-			
 			<h3 className="text--light">{spotsRemaining} </h3>
-			
 		</li>
 	);
 }
