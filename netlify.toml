@@ -13,4 +13,4 @@
 
 [build.environment]
   REACT_APP_API_BASE_URL = https://jaylens-scheduler.herokuapp.com/api
-  REACT_APP_WEBSOCKET_URL = https://jaylens-scheduler.herokuapp.com/api/days
+  REACT_APP_WEBSOCKET_URL = https://jaylens-scheduler.herokuapp.com/
