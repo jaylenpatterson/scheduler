@@ -1,5 +1,20 @@
 version: 2
 jobs:
+deploy:
+  machine:
+    enabled: true
+
+  working_directory: ~/client
+
+  steps:
+    - add_ssh_keys:
+        fingerprints:
+          - "d4:87:45:a2:86:f6:5c:f1:eb:2b:b0:3a:de:99:da:4a"
+    - checkout
+    - run:
+        name: Push Master to Production
+        command: |
+          git push https://github.com/lighthouse-labs/scheduler.git master:production
   build:
     docker:
       - image: circleci/node:10.16
