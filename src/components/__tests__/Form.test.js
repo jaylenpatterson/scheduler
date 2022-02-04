@@ -1,32 +1,32 @@
-// import React from 'react';
+import React from 'react';
 
-// import { render, cleanup, getByText, queryByText,} from '@testing-library/react';
+import { render, cleanup, getByText, queryByText,} from '@testing-library/react';
 
-// import Form from 'components/Appointment/Form';
+import Form from 'components/Appointment/Form';
 
 
-// afterEach(cleanup);
+afterEach(cleanup);
 
-// describe('Form', () => {
+describe('Form', () => {
 
-// 	const interviewers = [
-// 		{
-// 			id: 1,
-// 			name: 'Sylvia Palmer',
-// 			avatar: 'https://i.imgur.com/LpaY82x.png'
-// 		}
-// 	];
+	const interviewers = [
+		{
+			id: 1,
+			name: 'Sylvia Palmer',
+			avatar: 'https://i.imgur.com/LpaY82x.png'
+		}
+	];
 
-// 	it('renders without student name if not provided', () => {
+	it('renders without student name if not provided', () => {
 			
-// 	const { getByPlaceholderText } = render(<Form interviewers={interviewers} />);
-// 		expect(getByPlaceholderText('Enter Student Name')).toHaveValue('');
-// 	});
+	const { getByPlaceholderText } = render(<Form interviewers={interviewers} />);
+		expect(getByPlaceholderText('Enter Student Name')).toHaveValue('');
+	});
 
-// 	it('renders with initial student name', () => {
-// 		const { getByTestId } = render(<Form interviewers={interviewers} name="Lydia Miller-Jones" />);
-// 		expect(getByTestId('student-name-input')).toHaveValue('Lydia Miller-Jones');
-// 	});
+	it('renders with initial student name', () => {
+		const { getByTestId } = render(<Form interviewers={interviewers} name="Lydia Miller-Jones" />);
+		expect(getByTestId('student-name-input')).toHaveValue('Lydia Miller-Jones');
+	});
 
 // 	it.only("validates that the student name is not blank", () => {
 //   /* 1. validation is shown */
@@ -46,5 +46,5 @@
 //   /* 5. onSave is called with the correct arguments */
 //   expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", null);
 // });
-// });
+});
 
