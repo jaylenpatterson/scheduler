@@ -85,7 +85,7 @@ export default function Appointment(props) {
 						deleteApp();
 					}}
 					onCancel={back}
-					message={'are you sure doe?'}
+					message={'Are you sure?'}
 				/>
 			)}
 			{mode === ERROR_EMPTY && (
