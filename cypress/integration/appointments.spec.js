@@ -1,14 +1,23 @@
-describe('Navigation', () => {
-	it('should book an interview', () => {
-		cy.visit('/');
-    cy.contains("Monday");
-	});
+describe("Appointments", () => {
+  beforeEach(() => {
+   cy.request("GET", "/api/debug/reset");
+ 
+   cy.visit("/");
+ 
+   cy.contains("Monday");
+  });
+ 
+  it("should book an interview", () => {
+   
 
-	it('should edit an interview', () => {
-		cy.visit('/');
-	});
+  });
 
-	it('should cancel an interview', () => {
-		cy.visit('/');
-	});
-});
+  it("should edit the interview", () => {
+
+  })
+  
+  it("should cancel an interview", () => {
+
+
+  });
+ });
